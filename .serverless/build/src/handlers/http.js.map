@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../../src/handlers/http.ts"],
+  "sourcesContent": ["import serverless from \"serverless-http\";\nimport express from \"express\";\n\nconst app = express();\n\napp.use(express.json());\n\napp.get(\"/hello\", (req, res) => {\n  res.send(\"Hello World!\");\n});\n\nexport const run = serverless(app);\n"],
+  "mappings": ";AAAA,OAAO,gBAAgB;AACvB,OAAO,aAAa;AAEpB,IAAM,MAAM,QAAQ;AAEpB,IAAI,IAAI,QAAQ,KAAK,CAAC;AAEtB,IAAI,IAAI,UAAU,CAAC,KAAK,QAAQ;AAC9B,MAAI,KAAK,cAAc;AACzB,CAAC;AAEM,IAAM,MAAM,WAAW,GAAG;",
+  "names": []
+}

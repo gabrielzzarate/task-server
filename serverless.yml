@@ -1,0 +1,53 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: gabrielzzarate
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: task-server
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: task-server
+plugins:
+  - serverless-offline
+
+package:
+  patterns:
+    - "!src/**"
+    - src/handlers/**
+build:
+  esbuild:
+    # Enable or Disable bundling the function code and dependencies. (Default: true)
+    bundle: true
+    # Enable minifying function code. (Default: false)
+    minify: false
+    # NPM packages to not be bundled. Glob patterns are supported here.
+    external:
+      - "@aws-sdk/client-s3"
+    # NPM packages to not be bundled, as well as not included in node_modules
+    # in the zip file uploaded to Lambda. By default this will be set to aws-sdk
+    # if the runtime is set to nodejs16.x or lower or set to @aws-sdk/* if set to nodejs18.x or higher.
+    # Glob patterns are supported here.
+    exclude:
+      - "@aws-sdk/*"
+      - "!@aws-sdk/client-bedrock-runtime"
+    # The packages config, this can be set to override the behavior of external
+    # If this is set then all dependencies will be treated as external and not bundled.
+    packages: external
+    # By default Framework will attempt to build and package all functions concurrently.
+    # This property can bet set to a different number if you wish to limit the
+    # concurrency of those operations.
+    buildConcurrency: 3
+    # Enable or configure sourcemaps, can be set to true or to an object with further configuration.
+    sourcemap:
+      # The sourcemap type to use, options are (inline, linked, or external)
+      type: linked
+      # Whether to set the NODE_OPTIONS on functions to enable sourcemaps on Lambda
+      setNodeOptions: true
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+
+functions:
+  httpProxy:
+    handler: src/handlers/http.run
+    url: true
+    events:
+      - httpApi: "*"
