@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { validateData } from '../middleware/validators.js'
 import { userLoginSchema } from '../schemas/userSchema.js'
-import { logIn, signup, verifyAuthToken, checkAccount } from '../handlers/auth.js'
+import { login, signup, verifyAuthToken, checkAccount } from '../handlers/auth.js'
 
 const authRouter = Router()
 
@@ -9,7 +9,7 @@ const authRouter = Router()
 
 // create and login users and issue JWT tokens
 authRouter.post('/auth/signup', signup)
-authRouter.post('/auth/login', validateData(userLoginSchema), logIn)
+authRouter.post('/auth/login', validateData(userLoginSchema), login)
 authRouter.post('/auth/verify', verifyAuthToken)
 authRouter.post('/auth/check-account', checkAccount)
 

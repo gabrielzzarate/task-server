@@ -15,7 +15,7 @@ async function validate(req: Request, next: NextFunction) {
 }
 
 // The auth endpoint that creates a new user record or logs a user based on an existing record
-export async function logIn(req: Request, res: Response, next: NextFunction) {
+export async function login(req: Request, res: Response, next: NextFunction) {
   validate(req, next)
 
   const { email, password } = req.body
@@ -27,9 +27,7 @@ export async function logIn(req: Request, res: Response, next: NextFunction) {
   }
   // if the user exists, compare the hashed passwords and generate a JWT token
   if (user.length > 0) {
-    console.log('user', user)
     comparePasswords(password, user[0].password, (err, result) => {
-      console.log('result', result, err, user[0].password, password)
       if (err) {
         next(new CustomError(`Invalid password: ${err.message}`, 500))
       } else if (result) {
@@ -51,8 +49,9 @@ export async function logIn(req: Request, res: Response, next: NextFunction) {
 export async function signup(req: Request, res: Response, next: NextFunction) {
   const { email, password } = req.body
 
-  try {
-    hashPassword(password, async (_err, hash) => {
+  console.log('signup', req.body)
+  hashPassword(password, async (_err, hash) => {
+    try {
       const user = await db
         .insert(usersTable)
         .values({ ...req.body, password: hash })
@@ -68,10 +67,11 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
       const token = signToken(loginData)
 
       res.status(200).json({ message: 'success', token })
-    })
-  } catch (error) {
-    next(new CustomError(`Failed to add user: ${error?.detail}`, 500))
-  }
+    } catch (error) {
+      console.log('error', error)
+      next(new CustomError(`Failed to add user: ${error?.detail}`, 500))
+    }
+  })
 }
 
 // The verify endpoint that checks if a given JWT token is valid
