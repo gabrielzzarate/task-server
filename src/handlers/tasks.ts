@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm'
-import tasksTable, { InsertTask } from '../db/schema/task.js'
+import { tasksTable, InsertTask } from '../db/schema.js'
 import { db } from '../db/db.js'
 import { Response, Request, NextFunction } from 'express'
 import { CustomError } from '../lib/custom-error.js'

@@ -1,7 +1,7 @@
 import { validationResult } from 'express-validator'
 import { eq } from 'drizzle-orm'
 import { db } from '../db/db.js'
-import { users as usersTable } from '../db/schema/index.js'
+import { usersTable } from '../db/schema.js'
 import { Response, Request, NextFunction } from 'express'
 import { CustomError } from '../lib/custom-error.js'
 import { comparePasswords, hashPassword } from '../lib/bcrypt.js'
@@ -47,14 +47,14 @@ export async function login(req: Request, res: Response, next: NextFunction) {
 }
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
-  const { email, password } = req.body
+  const { email, password } = req.body?.user
 
   console.log('signup', req.body)
   hashPassword(password, async (_err, hash) => {
     try {
       const user = await db
         .insert(usersTable)
-        .values({ ...req.body, password: hash })
+        .values({ ...req.body?.user, password: hash })
         .returning()
 
       console.log('user', user)
@@ -68,7 +68,7 @@ export async function signup(req: Request, res: Response, next: NextFunction) {
 
       res.status(200).json({ message: 'success', token })
     } catch (error) {
-      console.log('error', error)
+      // console.log('error', error)
       next(new CustomError(`Failed to add user: ${error?.detail}`, 500))
     }
   })

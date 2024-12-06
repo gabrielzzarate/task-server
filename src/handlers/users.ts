@@ -1,7 +1,7 @@
 import { validationResult } from 'express-validator'
 import { eq } from 'drizzle-orm'
 import { db } from '../db/db.js'
-import { users as usersTable } from '../db/schema/index.js'
+import { usersTable } from '../db/schema.js'
 import { Response, Request, NextFunction } from 'express'
 import { CustomError } from '../lib/custom-error.js'
 
